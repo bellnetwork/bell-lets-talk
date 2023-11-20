@@ -1,7 +1,5 @@
 # The ultimative bell let's talk ui
 
-# The ultimative bell let's talk ui
-
 import os
 import tkinter as tk
 import socketio
@@ -17,18 +15,12 @@ os.environ['TK_SILENCE_DEPRECATION'] = '1'
 sio = socketio.Client()
 
 @sio.event
-def message(data):
-    chat_history.config(state=tk.NORMAL)
-    chat_history.insert(tk.END, "Server: " + data + "\n")
-    chat_history.config(state=tk.DISABLED)
-
-@sio.event
 def connect():
-    print("I'm connected!")
+    print("Connected to bell let's talk!")
 
 @sio.event
 def connect_error(data):
-    print("The connection failed!")
+    print("The connection failed! Reconecting...")
     print(data)
 
 @sio.event
@@ -43,9 +35,12 @@ def play_sound():
 
 @sio.event
 def message(data):
-    play_sound()  # Play sound on receiving a new message
+    play_sound()
     chat_history.config(state=tk.NORMAL)
-    chat_history.insert(tk.END, "Server: " + data + "\n")
+    if 'text' in data:
+        chat_history.insert(tk.END, data['text'] + "\n")
+    else:
+        chat_history.insert(tk.END, str(data) + "\n")
     chat_history.config(state=tk.DISABLED)
     
 def start_chat(event=None):
