@@ -65,30 +65,30 @@ def open_chat_window():
     chat_window.mainloop()
 
 def send_message(event=None):
-    global chat_window, chat_history, entry
     message = entry.get()
-    if message:
-        # Handle different commands
-        if message.lower() == '/exit':
-            chat_window.quit()  # Close the chat window
-        elif message.lower().startswith('/pm '):
-            parts = message.split(' ', 2)
-            if len(parts) == 3:
-                # Send private message to the server
-                sio.emit('private_message', {'target_username': parts[1], 'message': parts[2]})
-            else:
-                chat_history.insert(tk.END, "Invalid private message format. Use: /private <username> <message>\n")
-        elif message.lower() == '/global':
-            # Send a global switch message to the server
-            sio.emit('switch_to_global', {'username': username})
-        elif message.lower() == '/clear':
-            chat_history.config(state=tk.NORMAL)
-            chat_history.delete('1.0', tk.END)  # Clear the chat history
-            chat_history.config(state=tk.DISABLED)
+    entry.delete(0, tk.END)
+
+    if message.lower() == '/exit':
+        chat_window.destroy()
+        sio.disconnect()
+        return
+    elif message.lower().startswith('/pm '):
+        parts = message.split(' ', 2)
+        if len(parts) == 3:
+            # Send private message to the server
+            sio.emit('private_message', {'target_username': parts[1], 'message': parts[2]})
         else:
-            # Regular message
-            sio.emit('message', username + ": " + message)
-        entry.delete(0, tk.END)
+            chat_history.insert(tk.END, "Invalid private message format. Use: /pm <username> <message>\n")
+    elif message.lower() == '/global':
+        # Send a global switch message to the server
+        sio.emit('switch_to_global', {'username': username})
+    elif message.lower() == '/clear':
+        chat_history.config(state=tk.NORMAL)
+        chat_history.delete(1.0, tk.END)
+        chat_history.config(state=tk.DISABLED)
+    elif message:
+        # Send the message to the server
+        sio.emit('message', username + ": " + message)
 
 # Login Window
 login_window = tk.Tk()
