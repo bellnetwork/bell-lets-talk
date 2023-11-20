@@ -1,5 +1,3 @@
-# The ultimative bell let's talk terminal
-
 import os
 import socketio
 import threading
@@ -11,7 +9,10 @@ sio = socketio.Client()
 
 @sio.event
 def message(data):
-    print("\n" + data)
+    if 'text' in data:
+        print("\n" + data['text'])
+    else:
+        print("\n" + str(data))
 
 @sio.event
 def connect():
@@ -48,6 +49,8 @@ def open_chat_interface():
         sio.emit('user_typing', {'typing': False}) # Notify server user stopped typing
         if message.lower() == '/exit':
             break
+        elif message.lower() == '/users':
+            sio.emit('get_users')
         elif message.lower().startswith('/pm '):
             parts = message.split(' ', 2)
             if len(parts) == 3:
@@ -61,6 +64,8 @@ def open_chat_interface():
         elif message.lower() == '/clear':
             # Clear the terminal
             os.system('cls' if os.name == 'nt' else 'clear')
+        elif message.startswith('/'):
+            print("Command not recognized. Type /h for help.")
         elif message:
             # Notify server user is typing
             sio.emit('user_typing', {'typing': True})
@@ -69,6 +74,10 @@ def open_chat_interface():
             sio.emit('user_typing', {'typing': False})  # Notify server user stopped typing
 
     sio.disconnect()
+
+@sio.event
+def user_list(data):
+    print("\nOnline Users: " + ", ".join(data))
 
 @sio.event
 def user_typing_update(data):
