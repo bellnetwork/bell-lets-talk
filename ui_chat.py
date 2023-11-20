@@ -1,9 +1,16 @@
 # The ultimative bell let's talk ui
 
+# The ultimative bell let's talk ui
+
 import os
 import tkinter as tk
 import socketio
+import platform
 
+# Import winsound if the platform is Windows
+if platform.system() == "Windows":
+    import winsound
+    
 os.environ['TK_SILENCE_DEPRECATION'] = '1'
 
 # Create a Socket.IO client
@@ -27,7 +34,20 @@ def connect_error(data):
 @sio.event
 def disconnect():
     print("I'm disconnected!")
+    
+def play_sound():
+    if platform.system() == "Windows":
+        winsound.PlaySound("SystemExclamation", winsound.SND_ALIAS)
+    else:
+        os.system('afplay /System/Library/Sounds/Glass.aiff')
 
+@sio.event
+def message(data):
+    play_sound()  # Play sound on receiving a new message
+    chat_history.config(state=tk.NORMAL)
+    chat_history.insert(tk.END, "Server: " + data + "\n")
+    chat_history.config(state=tk.DISABLED)
+    
 def start_chat(event=None):  # Add event=None to handle callback from bind
     global username
     username = username_entry.get()
