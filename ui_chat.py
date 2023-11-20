@@ -120,6 +120,12 @@ def send_message(event=None):
         # Send the message to the server
         sio.emit('message', username + ": " + message)
 
+@sio.event
+def user_list(data):
+    chat_history.config(state=tk.NORMAL)
+    chat_history.insert(tk.END, "Online Users: " + ", ".join(data) + "\n")
+    chat_history.config(state=tk.DISABLED)
+
 # Login Window
 login_window = tk.Tk()
 login_window.title("Login")
