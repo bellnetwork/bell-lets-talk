@@ -10,8 +10,8 @@ if platform.system() == "Windows":
     import winsound
     
 os.environ['TK_SILENCE_DEPRECATION'] = '1'
-
-# Create a Socket.IO client
+version = "1.0.0"
+# Create a Socket.IO client 
 sio = socketio.Client()
 
 @sio.event
