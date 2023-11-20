@@ -14,7 +14,7 @@ Python (3.6 or later)
 
 Setting Up
 Clone the repository:
-    git clone https://github.com/your-github-username/Bell-Let-s-Talk.git
+    [git clone https://github.com/your-github-username/Bell-Let-s-Talk.git](https://github.com/bellnetwork/Bell-Let-s-Talk.git)
     cd Bell-Let-s-Talk
 
 Install the required packages:
