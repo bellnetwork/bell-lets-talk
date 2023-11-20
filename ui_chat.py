@@ -46,7 +46,7 @@ def start_chat(event=None):  # Add event=None to handle callback from bind
 def open_chat_window():
     global chat_window, chat_history, entry
     chat_window = tk.Tk()
-    chat_window.title("Chat - " + username)
+    chat_window.title("Bell Let´s Talk - " + username)
 
     chat_frame = tk.Frame(chat_window, bg="white")
     scrollbar = tk.Scrollbar(chat_frame)
@@ -84,10 +84,22 @@ def send_message(event=None):
     elif message.lower() == '/global':
         # Send a global switch message to the server
         sio.emit('switch_to_global', {'username': username})
+    elif message.lower() == '/users':
+        # Send a user list request to the server
+        sio.emit('get_users')
+        # Clear the chat history
     elif message.lower() == '/clear':
         chat_history.config(state=tk.NORMAL)
         chat_history.delete(1.0, tk.END)
         chat_history.config(state=tk.DISABLED)
+    elif message.lower() == '/help':
+        chat_history.insert(tk.END, "Commands:\n")
+        chat_history.insert(tk.END, "/exit - Exit the chat\n")
+        chat_history.insert(tk.END, "/pm <username> <message> - Send a private message\n")
+        chat_history.insert(tk.END, "/global - Switch to global chat\n")
+        chat_history.insert(tk.END, "/clear - Clear the chat\n")
+        chat_history.insert(tk.END, "/help - Show this help message\n")
+        chat_history.insert(tk.END, "/users - Show the list of users\n")
     elif message:
         # Send the message to the server
         sio.emit('message', username + ": " + message)
