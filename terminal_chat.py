@@ -3,7 +3,7 @@ import socketio
 import threading
 
 os.environ['TK_SILENCE_DEPRECATION'] = '1'
-
+version = "1.0.0"
 # Create a Socket.IO client
 sio = socketio.Client()
 
@@ -16,11 +16,11 @@ def message(data):
 
 @sio.event
 def connect():
-    print("Connected to the chat server!")
+    print("Connected to bell let's talk!")
 
 @sio.event
 def connect_error(data):
-    print("The connection failed:", data)
+    print("The connection failed! Reconecting...")
 
 @sio.event
 def disconnect():
@@ -64,8 +64,17 @@ def open_chat_interface():
         elif message.lower() == '/clear':
             # Clear the terminal
             os.system('cls' if os.name == 'nt' else 'clear')
+        elif message.lower() == '/version' or message.lower() == '/v':
+            print(f"Version: {version}")
         elif message.startswith('/'):
             print("Command not recognized. Type /h for help.")
+        elif message.lower() == '/help' or message.lower() == '/h':
+            print("\nCommands:")
+            print("/exit - Leave the chat")
+            print("/users - List online users")
+            print("/pm <username> <message> - Send a private message to a user")
+            print("/global - Switch to global chat")
+            print("/clear - Clear the terminal")
         elif message:
             # Notify server user is typing
             sio.emit('user_typing', {'typing': True})
