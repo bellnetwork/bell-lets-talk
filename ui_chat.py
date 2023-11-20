@@ -48,13 +48,14 @@ def message(data):
     chat_history.insert(tk.END, "Server: " + data + "\n")
     chat_history.config(state=tk.DISABLED)
     
-def start_chat(event=None):  # Add event=None to handle callback from bind
+def start_chat(event=None):
     global username
     username = username_entry.get()
     if username:
-        # Connect to the Socket.IO server
+        # Connect to the Socket.IO server with the username as a query parameter
+        connection_url = f"http://ebxyb83tr3cbw.bellsocket.com?username={username}"
         try:
-            sio.connect("http://ebxyb83tr3cbw.bellsocket.com", transports=['websocket'])
+            sio.connect(connection_url, transports=['websocket'])
         except Exception as e:
             print("Connection Error:", e)
             return
