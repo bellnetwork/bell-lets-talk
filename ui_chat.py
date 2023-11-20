@@ -90,6 +90,9 @@ def send_message(event=None):
         chat_window.destroy()
         sio.disconnect()
         return
+    elif message.lower() == '/users':
+        # Send a user list request to the server
+        sio.emit('get_users')
     elif message.lower().startswith('/pm '):
         parts = message.split(' ', 2)
         if len(parts) == 3:
@@ -100,21 +103,21 @@ def send_message(event=None):
     elif message.lower() == '/global':
         # Send a global switch message to the server
         sio.emit('switch_to_global', {'username': username})
-    elif message.lower() == '/users':
-        # Send a user list request to the server
-        sio.emit('get_users')
-        # Clear the chat history
+    # Clear the chat history
     elif message.lower() == '/clear':
         chat_history.config(state=tk.NORMAL)
         chat_history.delete(1.0, tk.END)
         chat_history.config(state=tk.DISABLED)
-    elif message.lower() == '/help':
+    elif message.lower() == '/version' or message.lower() == '/v':
+        chat_history.insert(tk.END, "Bell Let's Talk " + version + "\n")
+    elif message.startswith('/'):
+        chat_history.insert(tk.END, "Invalid command. Type /help to see the list of commands.\n")
+    elif message.lower() == '/help' or message.lower() == '/h':
         chat_history.insert(tk.END, "Commands:\n")
         chat_history.insert(tk.END, "/exit - Exit the chat\n")
         chat_history.insert(tk.END, "/pm <username> <message> - Send a private message\n")
         chat_history.insert(tk.END, "/global - Switch to global chat\n")
         chat_history.insert(tk.END, "/clear - Clear the chat\n")
-        chat_history.insert(tk.END, "/help - Show this help message\n")
         chat_history.insert(tk.END, "/users - Show the list of users\n")
     elif message:
         # Send the message to the server
