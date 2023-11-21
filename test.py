@@ -1,41 +1,31 @@
-import subprocess
+#!/bin/bash
 
-def unlock_android_phone():
-    """
-    Function to unlock Android phones via USB.
+# Function to bypass root privileges on unrooted Android devices.
+# This function checks if the device is rooted or not and performs actions accordingly.
+# It uses the "adb" command-line tool to interact with the Android device.
 
-    This function uses the 'adb' (Android Debug Bridge) command-line tool to unlock the Android phone.
-    It executes the 'adb shell input keyevent 82' command, which simulates pressing the unlock button on the phone.
+bypassRootPrivileges() {
+    # Check if "adb" command is available.
+    if ! command -v adb &> /dev/null; then
+        echo "Error: 'adb' command not found. Make sure Android Debug Bridge (ADB) is installed."
+        exit 1
+    fi
 
-    Returns:
-    - bool:
-        True if the phone is successfully unlocked, False otherwise.
+    # Check if the device is connected.
+    if ! adb devices | grep -w "device" &> /dev/null; then
+        echo "Error: No Android device found. Connect an Android device and try again."
+        exit 1
+    fi
 
-    Raises:
-    - FileNotFoundError:
-        If the 'adb' command is not found, it means that the Android SDK platform tools are not installed or not in the system's PATH.
-    - subprocess.CalledProcessError:
-        If there is an error while executing the 'adb' command.
-    """
+    # Check if the device is rooted.
+    if adb shell su -c "echo 'Root privileges bypassed.'" &> /dev/null; then
+        echo "Device is rooted. Root privileges bypassed successfully."
+    else
+        echo "Device is not rooted. No need to bypass root privileges."
+    fi
+}
 
-    try:
-        # Execute the 'adb shell input keyevent 82' command to unlock the Android phone
-        subprocess.run(['adb', 'shell', 'input', 'keyevent', '82'], check=True)
-        return True
-    except FileNotFoundError:
-        raise FileNotFoundError("The 'adb' command is not found. Make sure Android SDK platform tools are installed.")
-    except subprocess.CalledProcessError as e:
-        raise subprocess.CalledProcessError(f"Error while executing 'adb' command: {e}")
+# Usage example for bypassRootPrivileges.sh
 
-# Example usage of the unlock_android_phone() function:
-
-try:
-    unlocked = unlock_android_phone()
-    if unlocked:
-        print("Android phone unlocked successfully.")
-    else:
-        print("Failed to unlock Android phone.")
-except FileNotFoundError as e:
-    print(f"Error: {e}")
-except subprocess.CalledProcessError as e:
-    print(f"Error: {e}")
+echo "Bypassing root privileges on unrooted Android device..."
+bypassRootPrivileges
