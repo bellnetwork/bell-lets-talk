@@ -6,8 +6,8 @@ import threading
 
 os.environ['TK_SILENCE_DEPRECATION'] = '1'
 version = "1.0.0"
-# Create a Socket.IO client
 sio = socketio.Client()
+username = None
 
 @sio.event
 def message(data):
@@ -19,10 +19,16 @@ def message(data):
 @sio.event
 def connect():
     print("Connected to bell let's talk!")
+    chat_thread = threading.Thread(target=open_chat_interface)
+    chat_thread.start()  # Start the chat interface in a separate thread
 
 @sio.event
 def connect_error(data):
-    print("The connection failed! Reconecting...")
+    print("The connection failed! Reconnecting...")
+
+@sio.event
+def error(data):
+    print("Error:", data['text'])
 
 @sio.event
 def disconnect():
@@ -32,13 +38,17 @@ def start_chat():
     global username
     username = input("Enter your username: ")
     if username:
-        # Connect to the Socket.IO server with the username and version as query parameters
-        connection_url = f"http://ebxyb83tr3cbw.bellsocket.com?username={username}&version={version}"
+        # Connect to the Socket.IO server
         try:
+            # Include the username in the connection URL
+            connection_url = f"wss://ebxyb83tr3cbw.bellsocket.com?username={username}&version={version}"
             sio.connect(connection_url, transports=['websocket'])
         except Exception as e:
             print("Connection Error:", e)
             return
+
+        # Start the chat interface
+        open_chat_interface()
 
 def open_chat_interface():
     print(f"Welcome to the chat, {username}! Type '/exit' to leave.")
