@@ -15,12 +15,6 @@ version = "1.0.0"
 sio = socketio.Client()
 
 @sio.event
-def message(data):
-    chat_history.config(state=tk.NORMAL)
-    chat_history.insert(tk.END, "Server: " + data + "\n")
-    chat_history.config(state=tk.DISABLED)
-
-@sio.event
 def connect():
     print("I'm connected!")
 
@@ -43,10 +37,17 @@ def play_sound():
 def message(data):
     play_sound()  # Play sound on receiving a new message
     chat_history.config(state=tk.NORMAL)
-    if 'text' in data:
+
+    # Check if data is a dictionary and contains 'text' key
+    if isinstance(data, dict) and 'text' in data:
         chat_history.insert(tk.END, "Server: " + data['text'] + "\n")
+    elif isinstance(data, str):
+        # If data is just a string, insert it directly
+        chat_history.insert(tk.END, "Server: " + data + "\n")
     else:
+        # For other types of data, insert a placeholder message
         chat_history.insert(tk.END, "Server: [unknown message format]\n")
+
     chat_history.config(state=tk.DISABLED)
     
 def start_chat(event=None):
