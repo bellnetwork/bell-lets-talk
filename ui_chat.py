@@ -42,7 +42,9 @@ def message(data):
     else:
         chat_history.insert(tk.END, str(data) + "\n")
     chat_history.config(state=tk.DISABLED)
-    
+
+chat_history = None  # Initialize as None globally
+
 def start_chat(event=None):
     global username
     username = username_entry.get()
