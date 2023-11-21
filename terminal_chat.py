@@ -1,3 +1,5 @@
+# The ultimative bell let's talk terminal
+
 import os
 import socketio
 import threading
@@ -30,17 +32,13 @@ def start_chat():
     global username
     username = input("Enter your username: ")
     if username:
-        # Connect to the Socket.IO server
+        # Connect to the Socket.IO server with the username and version as query parameters
+        connection_url = f"http://ebxyb83tr3cbw.bellsocket.com?username={username}&version={version}"
         try:
-            # Include the username in the connection URL
-            connection_url = f"http://ebxyb83tr3cbw.bellsocket.com?username={username}"
             sio.connect(connection_url, transports=['websocket'])
         except Exception as e:
             print("Connection Error:", e)
             return
-
-        # Start the chat interface
-        open_chat_interface()
 
 def open_chat_interface():
     print(f"Welcome to the chat, {username}! Type '/exit' to leave.")
