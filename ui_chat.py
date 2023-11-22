@@ -55,7 +55,7 @@ def start_chat(event=None):
     username = username_entry.get()
     if username:
         # Connect to the Socket.IO server with the username as a query parameter
-        connection_url = f"wss://ebxyb83tr3cbw.bellsocket.com?username={username}&version={version}"
+        connection_url = f"wss://ebxyb83tr3cbw.bellsocket.com?username={username}&version={version}&token=YourSecretToken"
         try:
             sio.connect(connection_url, transports=['websocket'])
         except Exception as e:
