@@ -49,13 +49,23 @@ def message(data):
         chat_history.insert(tk.END, "Server: [unknown message format]\n")
 
     chat_history.config(state=tk.DISABLED)
-    
+
+@sio.event
+def token(data):
+    received_token = data.get('token')
+    if received_token:
+        print(f"Received token: {received_token}")
+        sio.emit('verify_token', {'token': received_token})
+    else:
+        error_message = data.get('error')
+        print(f"Error: {error_message}")
+        
 def start_chat(event=None):
     global username
     username = username_entry.get()
     if username:
         # Connect to the Socket.IO server with the username as a query parameter
-        connection_url = f"wss://ebxyb83tr3cbw.bellsocket.com?username={username}&version={version}&token=YourSecretToken"
+        connection_url = f"wss://ebxyb83tr3cbw.bellsocket.com?username={username}&version={version}"
         try:
             sio.connect(connection_url, transports=['websocket'])
         except Exception as e:
