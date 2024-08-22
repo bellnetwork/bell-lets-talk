@@ -24,7 +24,7 @@ echo "Creating .desktop launcher..."
 mkdir -p ~/.local/share/applications
 cat << EOF > $DESKTOP_FILE
 [Desktop Entry]
-Name=+Bell Let's Talk Terminal
+Name=Bell Let's Talk Terminal
 Comment=Launch the Bell Let's Talk chat application
 Exec=gnome-terminal -- /usr/bin/python3 $INSTALL_DIR/$SCRIPT_NAME
 Icon=utilities-terminal
