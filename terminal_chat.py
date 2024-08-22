@@ -41,7 +41,7 @@ def start_chat():
         # Connect to the Socket.IO server
         try:
             # Include the username in the connection URL
-            connection_url = f"wss://ebxyb83tr3cbw.bellsocket.com?username={username}&version={version}"
+            connection_url = f"wss://ebxyb83tr3cbw.belldns.com?username={username}&version={version}"
             sio.connect(connection_url, transports=['websocket'])
         except Exception as e:
             print("Connection Error:", e)
