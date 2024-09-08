@@ -18,7 +18,13 @@ Clone the repository:
     cd Bell-Let-s-Talk
 
 Install the required packages:
-    pip install python-socketio flask flask-socketio flask-cors
+    pip install python-socketio flask flask-socketio websocket-client flask-cors
+
+On macOS you may need also to install
+    brew install python-tk
+
+Or or linux debian/ubuntu based:
+  apt install python-tk
 
 Usage
   Bell-Let's-Talk offers two modes of operation: UI and Terminal.
